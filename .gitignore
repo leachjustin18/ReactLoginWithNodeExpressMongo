@@ -9,6 +9,7 @@ build/Release
 
 # Dependency directory
 node_modules
+public/JS
 
 # Optional npm cache directory
 .npm
