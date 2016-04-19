@@ -8,11 +8,12 @@ const BUILD_DIR = path.resolve(__dirname, 'public/JS');
 const APP_DIR = path.resolve(__dirname, 'react');
 
 var config = {
-    entry: APP_DIR + '/index.jsx',
+    entry: APP_DIR + '/client.jsx',
 
     output: {
         path: BUILD_DIR,
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: 'http://localhost:3000/JS/'
     },
     module: {
         loaders: [

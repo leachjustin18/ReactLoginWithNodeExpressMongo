@@ -15,8 +15,12 @@ var home = require('./express/routes/index');
 var compiler = webpack(config);
 
 app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: '/JS/'
+    noInfo: false,
+    publicPath: config.output.publicPath,
+    watchOptions: {
+        aggregateTimeout: 10,
+        poll: true
+    }
 }));
 
 
