@@ -27,7 +27,7 @@
     "url": "https://github.com/leachjustin18/ReactLoginWithNodeExpressMongo/issues"
   },
   "homepage": "https://github.com/leachjustin18/ReactLoginWithNodeExpressMongo#readme",
-  "dependencies": {
+  "devDependencies": {
     "babel-core": "^6.7.6",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.1.2",
@@ -40,5 +40,11 @@
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "webpack": "^1.13.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.4",
+    "hbs": "^4.0.0"
   }
 }
