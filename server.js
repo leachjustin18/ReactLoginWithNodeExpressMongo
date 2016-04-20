@@ -11,7 +11,6 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var path = require('path');
-var home = require('./express/routes/index');
 var compiler = webpack(config);
 
 app.use(require('webpack-dev-middleware')(compiler, {
@@ -27,26 +26,34 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 // set our port
 var port = process.env.PORT || 8080;
 
 
-// SET VIEW ENGINE
-// =============================================================================
-app.set('view engine', 'hbs');
+// // SET VIEW ENGINE
+// // =============================================================================
+// app.set('view engine', 'hbs');
+//
+// // SET WHERE OUR VIEWS ARE
+// // =============================================================================
+// app.set('views', __dirname + '/express/views');
+//
+// // REGISTER OUR ROUTES -------------------------------
+// app.get('/', home);
 
-// SET WHERE OUR VIEWS ARE
-// =============================================================================
-app.set('views', __dirname + '/express/views');
 
-// REGISTER OUR ROUTES -------------------------------
-app.get('/', home);
 
 //Specify where to look for CSS, JS, etc. 
 app.use(express.static(path.join(__dirname, '/public')));
+
+// handle every other route with index.html, which will contain
+// a script tag to your application's JavaScript file(s).
+app.get('*', function (request, response){
+    response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+});
 
 // START THE SERVER
 // =============================================================================

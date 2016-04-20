@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var path = require('path');
 var debug = process.env.NODE_ENV !== "production";
 const BUILD_DIR = path.resolve(__dirname, 'public/JS');
-const APP_DIR = path.resolve(__dirname, 'react');
+const APP_DIR = path.resolve(__dirname, 'app');
 
 var config = {
     entry: APP_DIR + '/client.jsx',
