@@ -2,6 +2,7 @@
  * Created by Justin.Leach on 4/21/2016.
  */
 import alt from '../alt';
+import { browserHistory } from 'react-router';
 
 
 class UserActions {
@@ -19,10 +20,17 @@ class UserActions {
         $.ajax({
                 type: 'POST',
                 url: '/api/users',
-                data: {firstName: firstName, lastName: lastName, email: email, userName: userName, password: password}
+                data: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    userName: userName,
+                    password: password,
+                    saveUser: true
+                }
             })
-            .done((data) => {
-                console.info(data)
+            .done(() => {
+                browserHistory.push('/users');
             })
     }
 

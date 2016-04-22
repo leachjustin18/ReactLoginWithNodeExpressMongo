@@ -11,7 +11,7 @@ class UserStore {
     }
 
     onGetUsersSuccess(data) {
-        this.users = data;
+        return this.users = data;
     }
 }
 

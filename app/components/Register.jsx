@@ -2,7 +2,7 @@
  * Created by Justin.Leach on 4/21/2016.
  */
 import React from 'react';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 
@@ -38,17 +38,13 @@ export default class Register extends React.Component {
         var userName = this.state.userName;
         var password = this.state.password;
 
-
-
-        console.log('From register ' + firstName + ' ' + lastName + ' ' + email + ' ' + userName + ' ' + ' ' + password);
-
         RegisterActions.addUser(firstName, lastName, email, userName, password);
     }
 
     render() {
         return (
             <form onSubmit={this.handleSubmit.bind(this)}>
-                <Grid>
+               
                     <Col xs={12}>Register</Col>
                     <Col xs={12}>
                         <TextField hintText="First Name" floatingLabelText="Please enter your first name"
@@ -81,7 +77,7 @@ export default class Register extends React.Component {
                     <Col xs={12}>
                         <RaisedButton label="Submit" secondary={true} type="submit"/>
                     </Col>
-                </Grid>
+              
             </form>
         )
     }

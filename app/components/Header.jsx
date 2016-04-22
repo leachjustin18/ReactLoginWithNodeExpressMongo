@@ -3,22 +3,18 @@
  */
 import React from 'react';
 import {Link} from 'react-router';
-import {Nav, NavItem} from 'react-bootstrap';
-
-
 
 export default class Header extends React.Component {
-  render() {
-      return (
-          <header>
-              <nav>
-                  <Nav bsStyle="pills">
-                      <NavItem eventKey={1} href="/">Home</NavItem>
-                      <NavItem eventKey={2} href="/users">Users</NavItem>
-                      <NavItem eventKey={3} href="/register">Register</NavItem>
-                  </Nav>
-              </nav>
-          </header>
-      )
-  }
+    render() {
+        return (
+            <header>
+                <nav>
+                    <Link to="/">Home</Link>
+                    <Link to="/users">Users</Link>
+                    <Link to="/register">Register</Link>
+                    <Link to="/login">Login</Link>
+                </nav>
+            </header>
+        )
+    }
 };

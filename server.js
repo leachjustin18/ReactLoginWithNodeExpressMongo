@@ -72,24 +72,32 @@ mongoose.connection.on('error', function () {
 //Post api/users
 //Add a new user to the database.
 app.post('/api/users', function (req, res, next) {
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var email = req.body.email;
-    var username = req.body.userName;
-    var password = req.body.password;
+    if (req.body.saveUser === true) {
+        var firstName = req.body.firstName;
+        var lastName = req.body.lastName;
+        var email = req.body.email;
+        var username = req.body.userName;
+        var password = req.body.password;
 
-    var user = UserSchema({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        userName: username,
-        password: password
-    });
+        var user = UserSchema({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            userName: username,
+            password: password
+        });
 
-    user.save(function (err) {
-        if (err) return console.error(err);
-        console.info({message: firstName + ' has been added successfully!'});
-    });
+        user.save(function (err) {
+            if (err) return console.error(err);
+            res.redirect('/users');
+            console.info({message: firstName + ' has been added successfully!'});
+        });
+    } else {
+        var userName = req.body.userName;
+        var password = req.body.password;
+
+        console.log(userName + ' ' + password);
+    }
 });
 
 app.get('/api/users', function (req, res, next) {

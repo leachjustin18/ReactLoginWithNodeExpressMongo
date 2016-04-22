@@ -5,22 +5,16 @@ import alt from '../alt';
 
 class UserActions {
     constructor() {
-        // this.generateActions(
-        //     'getTwoCharactersSuccess'
-        // );
-    }
-
-    getUsersSuccess(data) {
-        return data;
+        this.generateActions(
+            'getUsersSuccess'
+        );
     }
 
     getUsers() {
-        $.ajax({url: '/api/users' })
+        $.ajax({url: '/api/users'})
             .done(data => {
-                console.log(data)
                 this.getUsersSuccess(data);
             })
-
     }
 }
 
