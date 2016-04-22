@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var logger = require('morgan');
 
+
 //Webpack
 var webpack = require('webpack');
 var config = require('./webpack.config');
@@ -28,11 +29,16 @@ var swig = require('swig');
 var server = require('http').createServer(app);
 app.set('port', process.env.PORT || 8080);
 
+//MongoDB
+var mongoose = require('mongoose');
+var UserSchema = require('./models/user');
+var dbConfig = require('./dbconfig');
 
+
+app.set('port', process.env.PORT || 8080);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-
 
 
 /**
@@ -50,6 +56,54 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 
 /**
+ * CONNECT TO MONGOOSE
+ * ========================================
+ */
+mongoose.connect(dbConfig.database);
+mongoose.connection.on('error', function () {
+    console.warn('Error: Could not connect to MongoDB.  Did you forget to run `mondgod');
+});
+
+
+/**
+ * ROUTING
+ * =======================================
+ */
+//Post api/users
+//Add a new user to the database.
+app.post('/api/users', function (req, res, next) {
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var email = req.body.email;
+    var username = req.body.userName;
+    var password = req.body.password;
+
+    var user = UserSchema({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        userName: username,
+        password: password
+    });
+
+    user.save(function (err) {
+        if (err) return console.error(err);
+        console.info({message: firstName + ' has been added successfully!'});
+    });
+});
+
+app.get('/api/users', function (req, res, next) {
+    UserSchema
+        .find({})
+        .exec(function (err, users) {
+            if (err) return console.error(err);
+            return res.send(users);
+
+        })
+});
+
+
+/**
  * REACT ROUTER SERVER SIDE
  */
 app.use(function (req, res) {
@@ -57,7 +111,7 @@ app.use(function (req, res) {
         if (err) {
             res.status(500).send(err.message)
         } else if (renderProps) {
-            var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
+            var html = ReactDOM.renderToString(React.createElement(Router.RouterContext, renderProps));
             var page = swig.renderFile('views/index.html', {html: html});
             res.status(200).send(page);
         } else {
@@ -66,15 +120,11 @@ app.use(function (req, res) {
     });
 });
 
-//This is a stand in until react router
-// app.get('*', function (request, response) {
-//     response.sendFile(path.resolve(__dirname, 'views', 'index.html'))
-// });
-
 /**
  * PATH TO LOOK FOR LOCAL FILES
  */
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 /**
  * CONNECT TO THE SERVER

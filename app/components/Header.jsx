@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import {Link} from 'react-router';
+import {Nav, NavItem} from 'react-bootstrap';
+
 
 
 export default class Header extends React.Component {
@@ -10,11 +12,11 @@ export default class Header extends React.Component {
       return (
           <header>
               <nav>
-                  <ul>
-                      <li><Link to="/">Home</Link></li>
-                      <li><Link to="/users">Users</Link></li>
-                      <li><Link to="/register">Register</Link></li>
-                  </ul>
+                  <Nav bsStyle="pills">
+                      <NavItem eventKey={1} href="/">Home</NavItem>
+                      <NavItem eventKey={2} href="/users">Users</NavItem>
+                      <NavItem eventKey={3} href="/register">Register</NavItem>
+                  </Nav>
               </nav>
           </header>
       )
