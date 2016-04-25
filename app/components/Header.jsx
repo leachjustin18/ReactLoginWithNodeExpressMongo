@@ -27,13 +27,21 @@ export default class Header extends React.Component {
         this.setState(state);
     }
 
+    logCurrentUserOut() {
+        HeaderActions.logUserOut();
+    }
+
     render() {
         if (this.state.loggedUser) {
-            var loggedNode = this.state.loggedUser.map((character, index) => {
+           var test = this.state.loggedUser.map((character, index) => {
                 return (
                     <div key={character._id}>
                         <div >
                             {character.userName}
+
+                            <div onClick={this.logCurrentUserOut}>
+                                Logout
+                            </div>
                         </div>
                         <nav>
 
@@ -45,11 +53,19 @@ export default class Header extends React.Component {
                     </div>
 
                 );
+
             });
+
+
+            return (
+                <div>
+                    {test}
+                </div>
+            )
         } else {
-            var loggedNode = () => {
+
                 return (
-                    <div key={'not-logged'}>
+                    <div>
                         <nav>
 
                             <Link to="/">Home</Link>
@@ -60,15 +76,8 @@ export default class Header extends React.Component {
                     </div>
 
                 );
-            }
+
         }
 
-
-        return (
-            <header>
-                {loggedNode}
-
-            </header>
-        )
     }
 };

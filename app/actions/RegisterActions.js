@@ -3,6 +3,7 @@
  */
 import alt from '../alt';
 import { browserHistory } from 'react-router';
+import $ from 'jquery';
 
 
 class UserActions {
