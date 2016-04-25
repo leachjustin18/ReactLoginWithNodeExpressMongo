@@ -2,6 +2,7 @@
  * Created by Justin.Leach on 4/22/2016.
  */
 import alt from '../alt';
+import { browserHistory } from 'react-router';
 
 class LoginActions {
     constructor() {
@@ -14,14 +15,17 @@ class LoginActions {
 
     loginUser(username, password) {
         $.ajax({
-           type: 'POST',
-            url: '/api/users',
-            data: {
-                userName: username,
-                password: password,
-                saveUser: false
-            }
-        });
+                type: 'POST',
+                url: '/api/users/session',
+                data: {
+                    userName: username,
+                    password: password
+                }
+            })
+            .done(() => {
+                browserHistory.push('/');
+                location.reload();
+            });
 
     }
 }

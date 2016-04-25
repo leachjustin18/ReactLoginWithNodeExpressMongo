@@ -25,7 +25,6 @@ export default class Login extends React.Component {
     }
 
     onChange(state) {
-        console.log(state)
         this.setState(state);
     }
 

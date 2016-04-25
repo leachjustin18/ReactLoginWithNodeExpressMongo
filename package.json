@@ -46,6 +46,7 @@
     "alt": "^0.18.4",
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "history": "^2.1.0",
     "jquery": "^2.2.3",
     "material-ui": "^0.14.4",

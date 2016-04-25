@@ -33,12 +33,39 @@ app.set('port', process.env.PORT || 8080);
 var mongoose = require('mongoose');
 var UserSchema = require('./models/user');
 var dbConfig = require('./dbconfig');
+var session = require('express-session');
 
 
 app.set('port', process.env.PORT || 8080);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+
+/**
+ * SESSIONS
+ * ====================================================
+ */
+app.use(session({
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false, //original false. don't create session until something stored
+    secret: 'shhhh, very secret'
+
+}));
+
+// Session-persisted message middleware
+
+app.use(function (req, res, next) {
+    var err = req.session.error;
+    var msg = req.session.success;
+    delete req.session.error;
+    delete req.session.success;
+    res.locals.message = '';
+    if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+    if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+    req.session.cookie.expire = false;
+    next();
+});
 
 
 /**
@@ -64,6 +91,38 @@ mongoose.connection.on('error', function () {
     console.warn('Error: Could not connect to MongoDB.  Did you forget to run `mondgod');
 });
 
+/**
+ * AUTHENTICATION
+ * =======================================
+ */
+function authenticate(name, pass, fn) {
+
+    UserSchema.findOne({userName: name}, function (err, user) {
+        if (!user) return fn(new Error('cannot find user'));
+        // hash(pass, user.salt, function(err, hash){
+        //     if (err) return fn(err);
+        //     if (hash == user.hash) return fn(null, user);
+        //     fn(new Error('invalid password'));
+        // });
+
+        if (user.password === pass) {
+            return fn(null, user);
+        } else {
+            return fn(new Error('invalid password'));
+        }
+    });
+}
+
+
+// function restrict(req, res, next) {
+//     if (req.session.user) {
+//         next();
+//     } else {
+//         req.session.error = 'Access denied!';
+//         res.redirect('/login');
+//     }
+// }
+
 
 /**
  * ROUTING
@@ -72,32 +131,26 @@ mongoose.connection.on('error', function () {
 //Post api/users
 //Add a new user to the database.
 app.post('/api/users', function (req, res, next) {
-    if (req.body.saveUser === true) {
-        var firstName = req.body.firstName;
-        var lastName = req.body.lastName;
-        var email = req.body.email;
-        var username = req.body.userName;
-        var password = req.body.password;
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var email = req.body.email;
+    var username = req.body.userName;
+    var password = req.body.password;
 
-        var user = UserSchema({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            userName: username,
-            password: password
-        });
 
-        user.save(function (err) {
-            if (err) return console.error(err);
-            res.redirect('/users');
-            console.info({message: firstName + ' has been added successfully!'});
-        });
-    } else {
-        var userName = req.body.userName;
-        var password = req.body.password;
+    var user = UserSchema({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        userName: username,
+        password: password
+    });
 
-        console.log(userName + ' ' + password);
-    }
+    user.save(function (err) {
+        if (err) return console.error(err);
+        res.redirect('/');
+        console.info({message: firstName + ' has been added successfully!'});
+    });
 });
 
 app.get('/api/users', function (req, res, next) {
@@ -108,6 +161,46 @@ app.get('/api/users', function (req, res, next) {
             return res.send(users);
 
         })
+});
+
+
+/**
+ * USER SESSIONS
+ */
+app.post('/api/users/session', function (req, res, next) {
+//Login user
+    var loginUserName = req.body.userName;
+    var loginPassword = req.body.password;
+
+
+    authenticate(loginUserName, loginPassword, function (err, user) {
+        if (user) {
+            req.session.regenerate(function () {
+                req.session.user = user;
+                res.redirect('/users');
+                console.log('Logged in~ ' + user.userName);
+            });
+        } else {
+            console.log('Something went wrong ' + err);
+        }
+    });
+});
+
+
+app.get('/api/users/session', function (req, res, next) {
+    if (req.session.user) {
+
+        UserSchema
+            .find({userName: req.session.user.userName})
+            .exec(function (err, users) {
+                if (err) return console.error(err);
+                return res.send(users);
+
+            });
+
+        // console.log("# Client user check "+ req.session.user);
+        // res.json({data: req.session.user});
+    }
 });
 
 

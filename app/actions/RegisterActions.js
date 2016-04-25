@@ -25,8 +25,7 @@ class UserActions {
                     lastName: lastName,
                     email: email,
                     userName: userName,
-                    password: password,
-                    saveUser: true
+                    password: password
                 }
             })
             .done(() => {
